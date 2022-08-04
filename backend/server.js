@@ -9,6 +9,7 @@ process.on("uncaughtException", function (err) {
   console.log("shutting down the server due to uncaught exceptions ");
   process.exit(1);
 });
+
 dotenv.config({ path: "backend/config/config.env" });
 
 connectDatabase();

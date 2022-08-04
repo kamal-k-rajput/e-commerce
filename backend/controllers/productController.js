@@ -2,7 +2,9 @@ const Product = require("../models/productModel");
 const ErrorHandler = require("../utils/errorHandler");
 const catchAsyncErrors = require("../middlewares/catchAsyncErrors");
 const ApiFeatures = require("../utils/apiFeatures");
-//create product--->  admin
+
+//create product    --->  {-----admin----} <----
+
 exports.createProduct = catchAsyncErrors(async function (req, res, next) {
   try {
     const product = await Product.create(req.body);
@@ -15,7 +17,8 @@ exports.createProduct = catchAsyncErrors(async function (req, res, next) {
   }
 });
 
-// get all products
+// get all products   -----> {get all products} <-----
+
 exports.getAllProduct = catchAsyncErrors(async (req, res) => {
   const apiFeatures = new ApiFeatures(Product.find(), req.query).search();
   const Products = await apiFeatures.query;
@@ -23,7 +26,7 @@ exports.getAllProduct = catchAsyncErrors(async (req, res) => {
   return res.status(201).send({ success: true, Products });
 });
 
-// update product ==> admin
+// update product ==> admin    -----> {update} <-----
 
 exports.updateProduct = catchAsyncErrors(async (req, res, next) => {
   let product = await Product.findById(req.params.id);
@@ -40,7 +43,7 @@ exports.updateProduct = catchAsyncErrors(async (req, res, next) => {
   return res.status(200).json({ success: true, product: product });
 });
 
-// delete product from
+// delete product from <----{delete}---->
 
 exports.deleteProduct = catchAsyncErrors(async (req, res, next) => {
   const product = await Product.findById(req.params.id);
@@ -54,12 +57,12 @@ exports.deleteProduct = catchAsyncErrors(async (req, res, next) => {
     .json({ success: true, message: "product deleted successfully" });
 });
 
-// get product details
+// get product details  ------{get products}-----
 
 exports.getProductDetails = catchAsyncErrors(async (req, res, next) => {
   const product = await Product.findById(req.params.id);
   if (!product) {
-    return res.status(500).json({ error: "Product not found", success: false });
+    return next(new ErrorHandler("Product not found", 404));
   }
   return res.status(200).json({ success: true, product });
 });
